@@ -1,0 +1,63 @@
+A2 doc
+
+Inconclusion : every thing is implemented, no missing features
+
+Basic set up
+
+    - gravity : used a Constant downward acceleration -20f
+    - speed limit : Maximum ball speed capped at 100 units/sec
+    - energy loss and gain : boundary -- 0.9  |  triange -- 0.7  | cyclinder -- 1.3 
+    - multiple ball support : 2
+
+Step 1
+
+Paddle System
+
+    let field have a target angle and a rest angle which change when key pressed and use math function for interpolation for not making it
+    instantanious. paddle is made using probuilder and pivot is made by forming a parent at the pivot point and make paddle its child.
+    paddle also have speed field for the math function and for later collision resolvation
+
+Z jiggle
+    this is done by making a random vector3 with in a small range and add it to all ball obj in the ball list 
+
+
+
+Step 2
+
+Random generation system
+
+    this is done by recursively selet a point and test if it is too close to the triangle and cyclinder list and also boundaries by using some padding and ball radius.
+    if all list of object is not too close then init at that location. overlapping also count as too close in the logic and by using the above data we also allow a pinball to move freely between all objects.
+    triangle generation also give a random rotation about the y axis to make it not aline with the x axis.
+
+
+Step 3
+
+Collision Detection and Resolvation
+
+    - Boundary:
+        for boundary since it is fix just test x and y axis for the ball if reach the bounce off by the normal which is also fix
+        bouncing made by changing the velocity that is normal to the surface and keep the rest direction velocity the same
+
+    - Inclined wall : 
+        a boundary with a tilted fix normal, update the velocity using the function mention below
+
+    - Cylinder:
+        implement circle circle but different radius possible collision detection and resolvation.
+        the normal should be radius to radius vector normalized
+        we project the vector to the normal and add (1+e) of that amount to the opposite direction aline with normal and keep other direction the same
+
+    - Triangle:
+        implement this one similar to cylinder one but add a offset that make the hitbox slightly larger and keep it like realistic. can also find all 3 edge and do circle line collision but this is good enough and it looks real. the static circle line collision is already implemented in the boundary and inclinded wall and for dynamic normal the paddle collision also use such type
+        
+    - Paddle:
+        when paddle move we also find the exact contact point of that paddle with the ball, and again use that formula to calculate the new speed. we use relative velocity since two are both moving basically change the world to local by deleteing the speed of the other contacter and later just add it back. the boost is connect with the angular velocity of the paddle when contact, if no such thing then no boost.
+
+
+Step 4
+
+2 pinballs restriction and collision
+    the 2 pinballs restriction is just by adding a field and make generation function look at that field and if current amount is equal to that then dont generate
+    the circle circle collision by 2 exact same object is done by adding impluse and by using relative velocity of one.
+
+
